@@ -6,6 +6,7 @@ import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.wezom.payments.BasePaymentSystem;
@@ -22,9 +23,10 @@ import ua.privatbank.payoneclicklib.model.PayData;
 public class Privat24PaymentSystem extends BasePaymentSystem<PayData, String> implements
         ua.privatbank.framework.api.Api.ApiEventListener<Api>, Pay.PaymentCallBack, Pay.OtpCallBack {
 
+    private static final String TAG = "Privat24PaymenSystem";
     public static final Integer PAYMENT_SYSTEM_ID = 0;
-
     private static final int GPS_ENABLE_CODE = 900;
+
     private Pay mPay;
     private PayData mPayData;
     private String mMerchId;
@@ -52,16 +54,17 @@ public class Privat24PaymentSystem extends BasePaymentSystem<PayData, String> im
 
     @Override
     public void onApiStartRequest() {
-
+        Log.d(TAG, "Api start request");
     }
 
     @Override
     public void onApiFinishRequest() {
-
+        Log.d(TAG, "Api finish request");
     }
 
     @Override
     public void onApiError(Api api, Message.ErrorCode errorCode) {
+        Log.d(TAG, "Api error " + errorCode.name());
         switch (errorCode) {
             case CODE_GEOLOCATION_DISABLED:
                 showGeolocationEnableDialog();
@@ -91,16 +94,19 @@ public class Privat24PaymentSystem extends BasePaymentSystem<PayData, String> im
     @Override
     public void onPaymentFailed() {
         mPay.reset();
+        if (mPaymentCallback != null) {
+            mPaymentCallback.onPaymentError("Payment failed");
+        }
     }
 
     @Override
     public void onPaymentProcessing() {
-
+        Log.d(TAG, "Payment processing");
     }
 
     @Override
     public void onBackPressed() {
-
+        Log.d(TAG, "Back pressed");
     }
 
     private void showPhoneNumberDialog() {
@@ -162,12 +168,15 @@ public class Privat24PaymentSystem extends BasePaymentSystem<PayData, String> im
 
     @Override
     public void onOtpSuccess() {
-
+        Log.d(TAG, "Otp success");
     }
 
     @Override
     public void onOtpFailed() {
-
+        Log.d(TAG, "Otp failed");
+        if (mPaymentCallback != null) {
+            mPaymentCallback.onPaymentError("Wrong sms code");
+        }
     }
 
     @Override
