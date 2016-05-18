@@ -4,16 +4,16 @@ apply plugin: 'me.tatarka.retrolambda'
 
 ext {
     bintrayRepo = 'maven'
-    bintrayName = 'payments'
+    bintrayName = 'payments_example'
 
-    publishedGroupId = 'com.wezom.payments'
+    publishedGroupId = 'com.wezom.payments_example'
     libraryName = 'Payments'
     artifact = 'library'
 
     libraryDescription = 'The integration of payment systems'
 
-    siteUrl = 'https://github.com/WezomMobile/payments'
-    gitUrl = 'https://github.com/WezomMobile/payments.git'
+    siteUrl = 'https://github.com/WezomMobile/payments_example'
+    gitUrl = 'https://github.com/WezomMobile/payments_example.git'
 
     libraryVersion = '1.0'
 
@@ -56,6 +56,7 @@ dependencies {
     apt 'org.projectlombok:lombok:1.16.6'
 
     compile 'im.amomo.paypal:paypal-android:2.9.11@aar'
+    compile 'com.yandex.money.api:yandex-money-sdk-android:3.1.4'
 }
 
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'

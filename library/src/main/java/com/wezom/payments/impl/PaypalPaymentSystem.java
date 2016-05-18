@@ -23,23 +23,23 @@ public class PaypalPaymentSystem extends BasePaymentSystem<PayPalPayment, Object
     public static final Integer PAYMENT_SYSTEM_ID = 1;
 
     private PayPalConfiguration mPayPalConfiguration;
-    private String mClientId;
+    private String mMerchantId;
 
-    public PaypalPaymentSystem(AppCompatActivity activity, String clientId) {
+    public PaypalPaymentSystem(AppCompatActivity activity, String merchantId) {
         super(activity);
-        mClientId = clientId;
+        mMerchantId = merchantId;
     }
 
     public PaypalPaymentSystem(Fragment fragment, String paypalClientId) {
         super(fragment);
-        mClientId = paypalClientId;
+        mMerchantId = paypalClientId;
     }
 
     @Override
     public void initSystem() {
         mPayPalConfiguration = new PayPalConfiguration()
                 .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
-                .clientId(mClientId);
+                .clientId(mMerchantId);
 
         startPaypalService();
     }

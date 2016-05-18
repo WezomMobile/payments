@@ -29,21 +29,21 @@ public class Privat24PaymentSystem extends BasePaymentSystem<PayData, String> im
 
     private Pay mPay;
     private PayData mPayData;
-    private String mMerchId;
+    private String mClientId;
 
-    public Privat24PaymentSystem(AppCompatActivity activity, String merchId) {
+    public Privat24PaymentSystem(AppCompatActivity activity, String clientId) {
         super(activity);
-        mMerchId = merchId;
+        mClientId = clientId;
     }
 
     public Privat24PaymentSystem(Fragment fragment, String privat24MerchantId) {
         super(fragment);
-        mMerchId = privat24MerchantId;
+        mClientId = privat24MerchantId;
     }
 
     @Override
     public void initSystem() {
-        mPay = new Pay(getContext(), this, mMerchId);
+        mPay = new Pay(getContext(), this, mClientId);
     }
 
     @Override

@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:grid="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,7 +15,53 @@
     tools:showIn="@layout/activity_example">
 
     <EditText
+        android:id="@+id/merchant_id"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:hint="merhcant id"/>
+
+    <EditText
+        android:id="@+id/amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/merchant_id"
+        android:hint="amount"/>
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/amount"
+        android:text="payment systems:"/>
+
+    <android.support.v7.widget.GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/label"
+        android:layout_centerHorizontal="true"
+        grid:alignmentMode="alignBounds"
+        grid:columnCount="3"
+        grid:rowOrderPreserved="true"
+        grid:useDefaultMargins="true">
+
+        <Button
+            android:id="@+id/pay_yandex_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="yandex"/>
+
+        <Button
+            android:id="@+id/pay_paypal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PayPal"/>
+
+        <Button
+            android:id="@+id/pay_privatbank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Privat"/>
+
+    </android.support.v7.widget.GridLayout>
 
 </RelativeLayout>

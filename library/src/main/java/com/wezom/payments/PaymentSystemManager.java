@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.wezom.payments.impl.PaypalPaymentSystem;
 import com.wezom.payments.impl.Privat24PaymentSystem;
+import com.wezom.payments.impl.YandexMoneyPaymentSystem;
 
 import java.util.HashMap;
 
@@ -21,7 +22,8 @@ public class PaymentSystemManager {
     private HashMap<Integer, BasePaymentSystem> mPaymentSystems = new HashMap<>();
 
     private PaymentSystemManager(AppCompatActivity activity, Fragment fragment, String privat24MerchantId,
-                                 String paypalClientId) {
+                                 String paypalClientId, String yandexClientId) {
+
         if (!TextUtils.isEmpty(privat24MerchantId)) {
             Privat24PaymentSystem paymentSystem;
             if (activity != null) {
@@ -40,6 +42,16 @@ public class PaymentSystemManager {
                 paymentSystem = new PaypalPaymentSystem(fragment, paypalClientId);
             }
             mPaymentSystems.put(PaypalPaymentSystem.PAYMENT_SYSTEM_ID, paymentSystem);
+        }
+
+        if (!TextUtils.isEmpty(yandexClientId)) {
+            YandexMoneyPaymentSystem paymentSystem;
+            if (activity != null) {
+                paymentSystem = new YandexMoneyPaymentSystem(activity, yandexClientId);
+            } else {
+                paymentSystem = new YandexMoneyPaymentSystem(fragment, yandexClientId);
+            }
+            mPaymentSystems.put(YandexMoneyPaymentSystem.PAYMENT_SYSTEM_ID, paymentSystem);
         }
 
         for (BasePaymentSystem system : mPaymentSystems.values()) {
@@ -66,6 +78,14 @@ public class PaymentSystemManager {
             return (PaypalPaymentSystem) mPaymentSystems.get(PaypalPaymentSystem.PAYMENT_SYSTEM_ID);
         } else {
             throw new IllegalStateException("Paypal is not initialized");
+        }
+    }
+
+    public YandexMoneyPaymentSystem getYandexPaymentSystem(){
+        if (mPaymentSystems.containsKey(YandexMoneyPaymentSystem.PAYMENT_SYSTEM_ID)) {
+            return (YandexMoneyPaymentSystem) mPaymentSystems.get(YandexMoneyPaymentSystem.PAYMENT_SYSTEM_ID);
+        } else {
+            throw new IllegalStateException("Yandex is not initialized");
         }
     }
 
@@ -113,8 +133,9 @@ public class PaymentSystemManager {
 
         private AppCompatActivity mActivity;
         private Fragment mFragment;
-        private String mPrivat24MerchantId;
+        private String mPrivat24ClientId;
         private String mPaypalClientId;
+        private String mYandexClientId;
 
         private Builder(AppCompatActivity activity) {
             mActivity = activity;
@@ -132,8 +153,8 @@ public class PaymentSystemManager {
             return new Builder(fragment);
         }
 
-        public Builder privat24(String merchantId) {
-            mPrivat24MerchantId = merchantId;
+        public Builder privat24(String clientId) {
+            mPrivat24ClientId = clientId;
             return this;
         }
 
@@ -142,8 +163,13 @@ public class PaymentSystemManager {
             return this;
         }
 
+        public Builder yandexMoney(String clientId) {
+            mYandexClientId = clientId;
+            return this;
+        }
+
         public PaymentSystemManager build() {
-            return new PaymentSystemManager(mActivity, mFragment, mPrivat24MerchantId, mPaypalClientId);
+            return new PaymentSystemManager(mActivity, mFragment, mPrivat24ClientId, mPaypalClientId, mYandexClientId);
         }
     }
 }
