@@ -3,22 +3,29 @@ package com.wezom.payments;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.widget.EditText;
 
 import com.wezom.payments.impl.YandexMoneyPaymentSystem;
+import com.yandex.money.api.methods.params.P2pTransferParams;
 
-import butterknife.BindView;
+import java.math.BigDecimal;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ExampleActivity extends AppCompatActivity implements PaymentCallback<String> {
 
-    @BindView(R.id.merchant_id)
+    private static final String APPLICATION_ID = "370190E9AC2656043498E48F7A8CCEBAD03D15E4CC4CC988A757825A560631EC";
+
+    @Bind(R.id.merchant_id)
     EditText mMerchantIdEditText;
-    @BindView(R.id.amount)
+    @Bind(R.id.amount)
     EditText mAmountEditText;
 
-    YandexMoneyPaymentSystem mYandexMoneyPaymentSystem;
+    private YandexMoneyPaymentSystem mYandexMoneyPaymentSystem;
+    private PaymentSystemManager mPaymentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +40,11 @@ public class ExampleActivity extends AppCompatActivity implements PaymentCallbac
     }
 
     private void initPaymentSystem() {
-        String testYandexClientId = "370190E9AC2656043498E48F7A8CCEBAD03D15E4CC4CC988A757825A560631EC";
+        mPaymentManager = PaymentSystemManager.Builder.from(this)
+                .yandexMoneyApplicationId(APPLICATION_ID)
+                .yandexMoneyMerchantId("")
+                .build();
 
-        PaymentSystemManager mPaymentManager = PaymentSystemManager.Builder.from(this).yandexMoney(testYandexClientId).build();
         mPaymentManager.setPaymentCallback(this);
         mYandexMoneyPaymentSystem = mPaymentManager.getYandexPaymentSystem();
 
@@ -43,11 +52,15 @@ public class ExampleActivity extends AppCompatActivity implements PaymentCallbac
 
     @OnClick(R.id.pay_yandex_money)
     void payYandexMoney() {
-        String merchantId = mMerchantIdEditText.getText().toString();
-        String amount = mAmountEditText.getText().toString();
-        mYandexMoneyPaymentSystem.setTransferParams(merchantId, amount);
-        mYandexMoneyPaymentSystem.makePayment(null);
+        final String amount = mAmountEditText.getText().toString();
+        final String merchantId = mMerchantIdEditText.getText().toString().replaceAll("\\D", "");
 
+        P2pTransferParams.Builder builder = new P2pTransferParams.Builder(
+                !TextUtils.isEmpty(merchantId) ? merchantId :
+                        mYandexMoneyPaymentSystem.getMerchantId());
+        builder.setAmount(new BigDecimal(amount));
+
+        mYandexMoneyPaymentSystem.makePayment(builder.create());
     }
 
     @Override

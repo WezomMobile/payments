@@ -22,35 +22,41 @@ public class PaymentSystemManager {
     private HashMap<Integer, BasePaymentSystem> mPaymentSystems = new HashMap<>();
 
     private PaymentSystemManager(AppCompatActivity activity, Fragment fragment, String privat24MerchantId,
-                                 String paypalClientId, String yandexClientId) {
+                                 String paypalClientId, String yandexApplicationId, String yandexMerchantId) {
 
         if (!TextUtils.isEmpty(privat24MerchantId)) {
             Privat24PaymentSystem paymentSystem;
+
             if (activity != null) {
                 paymentSystem = new Privat24PaymentSystem(activity, privat24MerchantId);
             } else {
                 paymentSystem = new Privat24PaymentSystem(fragment, privat24MerchantId);
             }
+
             mPaymentSystems.put(Privat24PaymentSystem.PAYMENT_SYSTEM_ID, paymentSystem);
         }
 
         if (!TextUtils.isEmpty(paypalClientId)) {
             PaypalPaymentSystem paymentSystem;
+
             if (activity != null) {
                 paymentSystem = new PaypalPaymentSystem(activity, paypalClientId);
             } else {
                 paymentSystem = new PaypalPaymentSystem(fragment, paypalClientId);
             }
+
             mPaymentSystems.put(PaypalPaymentSystem.PAYMENT_SYSTEM_ID, paymentSystem);
         }
 
-        if (!TextUtils.isEmpty(yandexClientId)) {
+        if (!TextUtils.isEmpty(yandexApplicationId) && !TextUtils.isEmpty(yandexMerchantId)) {
             YandexMoneyPaymentSystem paymentSystem;
+
             if (activity != null) {
-                paymentSystem = new YandexMoneyPaymentSystem(activity, yandexClientId);
+                paymentSystem = new YandexMoneyPaymentSystem(activity, yandexApplicationId, yandexMerchantId);
             } else {
-                paymentSystem = new YandexMoneyPaymentSystem(fragment, yandexClientId);
+                paymentSystem = new YandexMoneyPaymentSystem(fragment, yandexApplicationId, yandexMerchantId);
             }
+
             mPaymentSystems.put(YandexMoneyPaymentSystem.PAYMENT_SYSTEM_ID, paymentSystem);
         }
 
@@ -133,9 +139,10 @@ public class PaymentSystemManager {
 
         private AppCompatActivity mActivity;
         private Fragment mFragment;
-        private String mPrivat24ClientId;
+        private String mPrivat24MerchantId;
         private String mPaypalClientId;
-        private String mYandexClientId;
+        private String mYandexApplicationId;
+        private String mYandexMerchantId;
 
         private Builder(AppCompatActivity activity) {
             mActivity = activity;
@@ -153,23 +160,28 @@ public class PaymentSystemManager {
             return new Builder(fragment);
         }
 
-        public Builder privat24(String clientId) {
-            mPrivat24ClientId = clientId;
+        public Builder privat24ClientId(String clientId) {
+            mPrivat24MerchantId = clientId;
             return this;
         }
 
-        public Builder paypal(String clientId) {
+        public Builder paypalClientId(String clientId) {
             mPaypalClientId = clientId;
             return this;
         }
 
-        public Builder yandexMoney(String clientId) {
-            mYandexClientId = clientId;
+        public Builder yandexMoneyApplicationId(String applicationId) {
+            mYandexApplicationId = applicationId;
+            return this;
+        }
+
+        public Builder yandexMoneyMerchantId(String merchantId) {
+            mYandexMerchantId = merchantId;
             return this;
         }
 
         public PaymentSystemManager build() {
-            return new PaymentSystemManager(mActivity, mFragment, mPrivat24ClientId, mPaypalClientId, mYandexClientId);
+            return new PaymentSystemManager(mActivity, mFragment, mPrivat24MerchantId, mPaypalClientId, mYandexApplicationId, mYandexMerchantId);
         }
     }
 }
