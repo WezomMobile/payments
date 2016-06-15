@@ -21,12 +21,14 @@ public class YandexMoneyPaymentSystem extends BasePaymentSystem<P2pTransferParam
     private static final String TAG = "YandexMoneyPaymentSystem";
 
     public static final Integer PAYMENT_SYSTEM_ID = 3;
-    private static final String HOST = "https://demomoney.yandex.ru";
+    private static final String HOST = "https://money.yandex.ru";
+    private static final String DEMO_HOST = "https://demomoney.yandex.ru";
     private static final int REQUEST_CODE = 101;
 
     private String mApplicationId;
     private String mMerchantId;
     private P2pTransferParams mTransferParams;
+    private String mHost = DEMO_HOST;
 
     public String getMerchantId() {
         return mMerchantId;
@@ -45,7 +47,8 @@ public class YandexMoneyPaymentSystem extends BasePaymentSystem<P2pTransferParam
     }
 
     @Override
-    public void initSystem() {
+    public void initSystem(boolean isSandBox) {
+        mHost = isSandBox ? DEMO_HOST : HOST;
     }
 
     @Override

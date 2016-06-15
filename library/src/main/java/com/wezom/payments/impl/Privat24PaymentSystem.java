@@ -42,7 +42,7 @@ public class Privat24PaymentSystem extends BasePaymentSystem<PayData, String> im
     }
 
     @Override
-    public void initSystem() {
+    public void initSystem(boolean isSandBox) {
         mPay = new Pay(getContext(), this, mClientId);
     }
 

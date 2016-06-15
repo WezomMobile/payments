@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Payments</string>
+    <string name="enter_your_phone_number">הזן את מספר הטלפון שלך</string>
+    <string name="enter_phone_number">הזן את מספר הטלפון שלך</string>
+    <string name="code">קוד</string>
+    <string name="need_enable_geolocation_in_order_to_pay">אתה צריך לאפשר מיקום גיאוגרפי עבור ביצוע תשלום</string>
+    <string name="enable">אפשר</string>
+    <string name="cancel">ביטול</string>
+    <string name="user_cancel_payment">בוטל תשלום</string>
+</resources>

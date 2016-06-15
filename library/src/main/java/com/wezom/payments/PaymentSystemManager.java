@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
+import com.wezom.payments.impl.PaymentWallPaymentSystem;
 import com.wezom.payments.impl.PaypalPaymentSystem;
 import com.wezom.payments.impl.Privat24PaymentSystem;
 import com.wezom.payments.impl.YandexMoneyPaymentSystem;
@@ -21,9 +22,12 @@ public class PaymentSystemManager {
 
     private HashMap<Integer, BasePaymentSystem> mPaymentSystems = new HashMap<>();
 
-    private PaymentSystemManager(AppCompatActivity activity, Fragment fragment, String privat24MerchantId,
-                                 String paypalClientId, String yandexApplicationId, String yandexMerchantId) {
+    private PaymentSystemManager(AppCompatActivity activity, Fragment fragment,
+                                 String privat24MerchantId, String paypalClientId,
+                                 String yandexApplicationId, String yandexMerchantId,
+                                 String paymentWallProjectKey, String paymentWallSecretKey) {
 
+//        Init Privat24
         if (!TextUtils.isEmpty(privat24MerchantId)) {
             Privat24PaymentSystem paymentSystem;
 
@@ -36,6 +40,7 @@ public class PaymentSystemManager {
             mPaymentSystems.put(Privat24PaymentSystem.PAYMENT_SYSTEM_ID, paymentSystem);
         }
 
+//        Init PayPal
         if (!TextUtils.isEmpty(paypalClientId)) {
             PaypalPaymentSystem paymentSystem;
 
@@ -48,6 +53,7 @@ public class PaymentSystemManager {
             mPaymentSystems.put(PaypalPaymentSystem.PAYMENT_SYSTEM_ID, paymentSystem);
         }
 
+//        Init Yandex money
         if (!TextUtils.isEmpty(yandexApplicationId) && !TextUtils.isEmpty(yandexMerchantId)) {
             YandexMoneyPaymentSystem paymentSystem;
 
@@ -60,9 +66,22 @@ public class PaymentSystemManager {
             mPaymentSystems.put(YandexMoneyPaymentSystem.PAYMENT_SYSTEM_ID, paymentSystem);
         }
 
-        for (BasePaymentSystem system : mPaymentSystems.values()) {
-            system.initSystem();
+//        Init PaymenWall
+        if (!TextUtils.isEmpty(paymentWallProjectKey) && !TextUtils.isEmpty(paymentWallSecretKey)) {
+            PaymentWallPaymentSystem paymentSystem;
+
+            if (activity != null) {
+                paymentSystem = new PaymentWallPaymentSystem(activity, paymentWallProjectKey, paymentWallSecretKey);
+            } else {
+                paymentSystem = new PaymentWallPaymentSystem(fragment, paymentWallProjectKey, paymentWallSecretKey);
+            }
+
+            mPaymentSystems.put(PaymentWallPaymentSystem.PAYMENT_SYSTEM_ID, paymentSystem);
         }
+
+        /*for (BasePaymentSystem system : mPaymentSystems.values()) { // Uncomment if need init payment system automatically
+            system.initSystem(true);
+        }*/
     }
 
     public void setPaymentCallback(PaymentCallback paymentCallback) {
@@ -92,6 +111,14 @@ public class PaymentSystemManager {
             return (YandexMoneyPaymentSystem) mPaymentSystems.get(YandexMoneyPaymentSystem.PAYMENT_SYSTEM_ID);
         } else {
             throw new IllegalStateException("Yandex is not initialized");
+        }
+    }
+
+    public PaymentWallPaymentSystem getPaymentWallPaymentSystem(){
+        if (mPaymentSystems.containsKey(PaymentWallPaymentSystem.PAYMENT_SYSTEM_ID)) {
+            return (PaymentWallPaymentSystem) mPaymentSystems.get(PaymentWallPaymentSystem.PAYMENT_SYSTEM_ID);
+        } else {
+            throw new IllegalStateException("PaymentWall is not initialized");
         }
     }
 
@@ -143,6 +170,8 @@ public class PaymentSystemManager {
         private String mPaypalClientId;
         private String mYandexApplicationId;
         private String mYandexMerchantId;
+        private String mPaymentWallProjectKey;
+        private String mPaymentWallSecretKey;
 
         private Builder(AppCompatActivity activity) {
             mActivity = activity;
@@ -180,8 +209,19 @@ public class PaymentSystemManager {
             return this;
         }
 
+        public Builder paymentWallProjectKey(String projectKey) {
+            mPaymentWallProjectKey = projectKey;
+            return this;
+        }
+
+        public Builder paymentWallSecretKey(String secretKey) {
+            mPaymentWallSecretKey = secretKey;
+            return this;
+        }
+
         public PaymentSystemManager build() {
-            return new PaymentSystemManager(mActivity, mFragment, mPrivat24MerchantId, mPaypalClientId, mYandexApplicationId, mYandexMerchantId);
+            return new PaymentSystemManager(mActivity, mFragment, mPrivat24MerchantId, mPaypalClientId,
+                    mYandexApplicationId, mYandexMerchantId, mPaymentWallProjectKey, mPaymentWallSecretKey);
         }
     }
 }

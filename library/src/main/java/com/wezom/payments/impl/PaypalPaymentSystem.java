@@ -36,9 +36,9 @@ public class PaypalPaymentSystem extends BasePaymentSystem<PayPalPayment, Object
     }
 
     @Override
-    public void initSystem() {
+    public void initSystem(boolean isSandBox) {
         mPayPalConfiguration = new PayPalConfiguration()
-                .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+                .environment(isSandBox ? PayPalConfiguration.ENVIRONMENT_SANDBOX : PayPalConfiguration.ENVIRONMENT_PRODUCTION)
                 .clientId(mMerchantId);
 
         startPaypalService();

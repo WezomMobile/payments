@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Payments</string>
+    <string name="enter_your_phone_number">Введите Ваш номер телефона</string>
+    <string name="enter_phone_number">Введите номер телефона</string>
+    <string name="code">Код</string>
+    <string name="need_enable_geolocation_in_order_to_pay">Необходимо включить геолокацию для совершения оплаты</string>
+    <string name="enable">Включить</string>
+    <string name="cancel">Отмена</string>
+    <string name="user_cancel_payment">Платеж отменен</string>
+</resources>

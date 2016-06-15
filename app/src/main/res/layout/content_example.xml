@@ -51,6 +51,12 @@
             android:text="yandex"/>
 
         <Button
+            android:id="@+id/pay_payment_wall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="payment wall"/>
+
+        <Button
             android:id="@+id/pay_paypal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

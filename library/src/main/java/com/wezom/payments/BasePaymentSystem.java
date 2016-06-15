@@ -39,7 +39,7 @@ abstract public class BasePaymentSystem<T1, T2> implements PaymentSystem<T1> {
         return getActivity() != null ? getActivity() : getFragment().getContext();
     }
 
-    abstract public void initSystem();
+    abstract public void initSystem(boolean isSandBox);
 
     public void onResume() {
 
