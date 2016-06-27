@@ -162,6 +162,12 @@ public class PaymentSystemManager {
         }
     }
 
+    public void initPaymentSystems(boolean isSandBox) {
+        for (PaymentSystem paymentSystem : mPaymentSystems.values()) {
+            paymentSystem.initSystem(isSandBox);
+        }
+    }
+
     public static class Builder {
 
         private AppCompatActivity mActivity;
